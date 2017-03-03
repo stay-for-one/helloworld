@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<!--HTML5 doctype-->
+<html>
+
+<head>
+
+    <title>学生互助平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+
+    --><meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" type="text/css" href="cs/icons.css" />
+    <link rel="stylesheet" type="text/css" href="cs/af.ui.css" />
+    <link rel="stylesheet" type="text/css" href="cs/mystyle.css" />
+    <link href="cs/newscss.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" media="screen" href="cs/bootstrap.css">
+    <link rel="icon" href="images/WuHou.png">
+    <script type="text/javascript" charset="utf-8" src="js/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="js/libs/iscroll-probe.js"></script>
+    <script type="text/javascript" src="js/libs/fastclick.js"></script>
+    <!--<script type="text/javascript" src="src/appframework.ui.js"></script>-->
+    <script type="text/javascript" charset="utf-8" src="src/af.shim.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.ui.js"></script>
+    <script src="src/af.desktopBrowsers.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.actionsheet.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.animation.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.touchEvents.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.popup.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.drawer.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.toast.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.animateheader.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.splashscreen.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.swipereveal.js"></script>
+    <script type="text/javascript" charset="utf-8" src="src/af.lockscreen.js"></script>
+    <script>
+        $.afui.useOSThemes=false;
+        $.afui.loadDefaultHash=true;
+        $.afui.autoLaunch=false;
+        //check search
+        //var search=document.location.search.toLowerCase().replace("?","");
+        var search="ios7";
+        if(search.length>0)
+        {
+
+            $.afui.useOSThemes=true;
+            if(search=="win8")
+                $.os.ie=true;
+            else if(search=="firefox")
+                $.os.fennec="true";
+            $.afui.ready(function(){
+                $(document.body).get(0).className=(search);
+            });
+        }
+
+    </script>
+
+
+
+    <script type="text/javascript">
+
+        //详情页
+        function clickdetail(clickid)
+        {
+            var clickdailyid=clickid;
+            //window.location.href="#newsdetail?id="+clickid;
+            $.ajax({ //一个Ajax过程
+                type: "post",  //以post方式与后台沟通
+                url : "php/Item_select.php", //与此php页面沟通
+                dataType:'json',//从php返回的值以 JSON方式 解释
+                data: 'dailyid='+clickdailyid, //发给php的请求数据
+                success: function(json) {
+                    alert(6);
+                    if(json.Success==0){
+                        alert('已完成');
+                        window.location.href='login1.html';
+                    }
+                    if(json.Success==1){
+                        window.location.href='Item_check.html';
+                    }
+                }
+            });
+
+        }
+        function setItem()
+        {
+
+
+            $.ajax({ //一个Ajax过程
+                type: "post",  //以post方式与后台沟通
+                url : "php/Item_selects.php", //与此php页面沟通
+                dataType:'json',//从php返回的值以 JSON方式 解释
+                date:'page='+1,
+                success: function(json) {
+                    for(var j=0;j<json['ItemId'].length;j++){
+                        var clickdailyid=json['ItemId'][j];
+
+                        $('#list').append(" <li><div class='mycard'>" +
+                                "<div style='top:0;left:0;position:absolute;width:60px;height:30px;background-size:100% 100%;' ></div>"+
+                                "<div><p><h1><a href='#' data-transition='up-reveal' onclick='clickdetail("+json['ItemId'][j]+");'>"+
+                                "<strong>抢单</strong></a></h1>" +
+                                "<h3 align='right' >价格："+json['Price'][j]+"</h3></p><h1>下单人"+json['Username'][j]+"</h1><h3 >时间:"+json['Date'][j]+"</h3><p><h1>地点:"+json['Addressname'][j]+"</h1><h3 >订单类型："+json['Producttypename'][j]+"</h3></p><h1>"+json['statename'][j]+"</h1></div></div></li></li>");
+
+
+//
+//
+
+//                         $('#list').append("<li><div class='mycard' style='background-image: url(2.png);background-size: 100% 10rem;'>" +
+//                                "<div style='top:0;left:0;position:absolute;width:60px;height:30px;background-size:100% 100%;'>" +
+//                                "</div><div><p style='font-size:14px; font-weight:700;'>" +
+//                                " <div><p><h1><a href='#' data-transition='up-reveal' onclick='clickdetail("+json['ItemId'][j]+");'>" +
+//                                "<strong>抢单</strong></a></h1>"+
+//                                "<h3 align='right' >价格："+json['Price'][j]+"</h3></p><h1>下单人:"+json['Username'][j]+"</h1><h3 >时间:"+json[Date][j]+"</h3><p><h1>地点:"+json['Addressname'][j]+"</h1><h3 >订单类型："+json['Producttypename'][j]+"</h3></p></div></div></div></li>");
+
+                    }
+                }
+            });
+        }
+
+        function loginstate()
+        {//登录状态验证
+            $.ajax({ //一个Ajax过程
+                type: "post",  //以post方式与后台沟通
+                url : "php/loginstate.php", //与此php页面沟通
+                dataType:'json',//从php返回的值以 JSON方式 解释
+                success: function(json)
+                {
+                    if(json.state==0){
+                        alert('登录超时,请重新登录');
+                        window.location.href='login1.html';
+                    }
+                    if(json.permission!=1 && json.permission!=2)
+                    {
+
+                        $('#AddNews').remove();
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function(){
+            loginstate();//登录状态验证
+            $('#mainPage').on('panelbeforeunload',function(e){
+                console.log('view before unload');
+                $(this).find('.panel').removeClass('active');
+            });
+            //trec();
+//            setItem();
+            $.afui.launch();
+        });
+        function JudgeDate(strTime){
+            var myDate=new Date();
+            var y=myDate.getFullYear();
+            var m=myDate.getMonth();
+            var d=myDate.getDate();
+            var h=myDate.getHours()-1;
+            var mm=myDate.getMinutes();
+            var ss=myDate.getSeconds();
+            var nowtime=new Date(y,m,d);
+
+            //var arr=strTime.split(" ");
+
+            var arr1=strTime.split("-");
+            if(arr1.length>=3){
+                var bb=new Date(arr1[0],arr1[1]-1,arr1[2]);
+                //alert(bb);
+                if(bb.getTime()==nowtime.getTime())
+                    return true;
+                else
+                    return false
+
+            }
+            else{
+                return false;
+            }
+        }
+        var items_per_page = 5;
+        var scroll_in_progress = false;
+        var myScroll;
+        load_content = function(refresh, next_page) {
+            alert(1);
+            console.log(refresh, next_page);
+            setTimeout(function() { // This immitates the CALLBACK of your AJAX function
+                if (!refresh) {
+
+                    // Loading the initial content
+                    $.ajax({ //一个Ajax过程
+                        type: "post",  //以post方式与后台沟通
+                        url : "php/Item_selects.php", //与此php页面沟通
+                        dataType:'json',//从php返回的值以 JSON方式 解释
+                        data: 'page='+'1', //发给php的请求数据
+                        success: function(json)
+                        {
+
+                            for(var j=0;j<json['ItemId'].length;j++){
+                                var clickdailyid=json['ItemId'][j];
+                               // $('#wrapper>#scroller>#list').clearQueue();
+
+                                /*$('#wrapper > #scroller > ul')
+                                 .append("<li><div class='mycard'><div style='top:0;left:0;position:absolute;width:60px;height:30px;background-size:100% 100%' id='latestnews"+next_page+j+"'></div><p><a href='#newsdetail' data-transition='up-reveal' onclick='clickdetail("+json['InputId'][j]+");'>"+json['ProductName'][j]+"</a></p><h1>"+json['Univalent'][j]+"</h1><h3>"+json['SellerName'][j]+"</h3></div></li>");*/
+                                $('#wrapper > #scroller > #list').append(" <li><div class='mycard'>" +
+                                        "<div style='top:0;left:0;position:absolute;width:60px;height:30px;background-size:100% 100%;' ></div>"+
+                                        "<div><p><h1><a href='#' data-transition='up-reveal' onclick='clickdetail("+json['ItemId'][j]+");'>"+
+                                        "<strong>抢单</strong></a></h1>" +
+                                        "<h3 align='right' >价格："+json['Price'][j]+"</h3></p><h1>下单人"+json['Username'][j]+"</h1><h3 >时间:"+json['Date'][j]+"</h3><p><h1>地点:"+json['Addressname'][j]+"</h1><h3 >订单类型："+json['Producttypename'][j]+"</h3></p><h1>"+json['statename'][j]+"</h1></div></div></li></li>");
+
+
+                            }
+                            $('#wrapper > #scroller >#pullUpUpdate').append("<h3 style='text-align:center'>下拉更多>></h3>");
+                        }
+                    });
+                } else if (refresh && !next_page) {
+                    // Refreshing the content
+                    $('#wrapper > #scroller > #list').html('');
+                    $.ajax({ //一个Ajax过程
+                        type: "post",  //以post方式与后台沟通
+                        url : "php/Item_selects.php", //与此php页面沟通
+                        dataType:'json',//从php返回的值以 JSON方式 解释
+                        data: 'page='+'1', //发给php的请求数据
+                        success: function(json)
+                        {
+                            for(var j=0;j<json['ItemId'].length;j++){
+                                $('#wrapper > #scroller > #list')
+                                append(" <li><div class='mycard'>" +
+                                        "<div style='top:0;left:0;position:absolute;width:60px;height:30px;background-size:100% 100%;' ></div>"+
+                                        "<div><p><h1><a href='#' data-transition='up-reveal' onclick='clickdetail("+json['ItemId'][j]+");'>"+
+                                        "<strong>抢单</strong></a></h1>" +
+                                        "<h3 align='right' >价格："+json['Price'][j]+"</h3></p><h1>下单人"+json['Username'][j]+"</h1><h3 >时间:"+json['Date'][j]+"</h3><p><h1>地点:"+json['Addressname'][j]+"</h1><h3 >订单类型："+json['Producttypename'][j]+"</h3></p><h1>"+json['statename'][j]+"</h1></div></div></li></li>");
+
+
+                                //else
+                                //alert("小于当前时间(提前2个小时)");
+                            }
+                            $('#wrapper > #scroller >#pullUpUpdate').append("<h3 style='text-align:center'>下拉更多>></h3>");
+                        }
+                    });
+                } else if (refresh && next_page) {
+                    // Loading the next-page content and refreshing
+                    $.ajax({ //一个Ajax过程
+                        type: "post",  //以post方式与后台沟通
+                        url : "php/Item_selects.php", //与此php页面沟通
+                        dataType:'json',//从php返回的值以 JSON方式 解释
+                        data: 'page='+next_page, //发给php的请求数据
+                        success: function(json)
+                        {
+                            for(var j=0;j<json['ItemId'].length;j++){
+                                $('#wrapper > #scroller > #list')
+                                append(" <li><div class='mycard'>" +
+                                        "<div style='top:0;left:0;position:absolute;width:60px;height:30px;background-size:100% 100%;' ></div>"+
+                                        "<div><p><h1><a href='#' data-transition='up-reveal' onclick='clickdetail("+json['ItemId'][j]+");'>"+
+                                        "<strong>抢单</strong></a></h1>" +
+                                        "<h3 align='right' >价格："+json['Price'][j]+"</h3></p><h1>下单人"+json['Username'][j]+"</h1><h3 >时间:"+json['Date'][j]+"</h3><p><h1>地点:"+json['Addressname'][j]+"</h1><h3 >订单类型："+json['Producttypename'][j]+"</h3></p><h1>"+json['statename'][j]+"</h1></div></div></li></li>");
+
+
+                                //else
+                                //alert("小于当前时间(提前2个小时)");
+                            }
+                            $('#wrapper > #scroller >#pullUpUpdate').append("<h3 style='text-align:center'>下拉更多>></h3>");
+                        }
+                    });
+                }
+                if (refresh) {
+                    myScroll.refresh();
+                    pullActionCallback();
+                    $('#wrapper > #scroller >#pullUpUpdate').append("<h3 style='text-align:center'>无更多信息！</h3>");
+
+                } else {
+                    if (myScroll) {
+                        $('#wrapper > #scroller >#pullUpUpdate').empty();
+                        $('#wrapper > #scroller >#pullUpUpdate').append("<h3 style='text-align:center'>无更多信息！</h3>");
+                        myScroll.destroy();
+                        $(myScroll.scroller).attr('style', ''); // Required since the styles applied by IScroll might conflict with transitions of parent layers.
+                        myScroll = null;
+                    }
+                    trigger_myScroll();
+                }
+            }, 0);
+        };
+        function pullDownAction() {
+            load_content('refresh');
+            $('#wrapper > #scroller > ul').data('page', 1);
+            // Since "topOffset" is not supported with iscroll-5
+            $('#wrapper > .scroller').css({top:0});
+        }
+        function pullUpAction(callback) {
+            if ($('#wrapper > #scroller > ul').data('page')) {
+                var next_page = parseInt($('#wrapper > #scroller > ul').data('page'), 10) + 1;
+            } else {
+                var next_page = 2;
+            }
+            load_content('refresh', next_page);
+            $('#wrapper > #scroller > ul').data('page', next_page);
+            if (callback) {
+                callback();
+            }
+        }
+        function pullActionCallback() {
+            if (pullDownEl && pullDownEl.className.match('loading')) {
+                pullDownEl.className = 'pullDown';
+                pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新';
+                myScroll.scrollTo(0, parseInt(pullUpOffset)*(-1), 60);
+            } else if (pullUpEl && pullUpEl.className.match('loading')) {
+                $('.pullUp').removeClass('loading').html('');
+
+            }
+        }
+        var pullActionDetect = {
+            count:0,
+            limit:10,
+            check:function(count) {
+                if (count) {
+                    pullActionDetect.count = 0;
+                }
+                // Detects whether the momentum has stopped, and if it has reached the end - 200px of the scroller - it trigger the pullUpAction
+                setTimeout(function() {
+                    if (myScroll.y <= (myScroll.maxScrollY + 60) && pullUpEl && !pullUpEl.className.match('loading')) {
+                        $('.pullUp').addClass('loading').html('<span class="pullUpIcon">&nbsp;</span><span class="pullUpLabel">加载中...</span>');
+                        pullUpAction();
+                    } else if (pullActionDetect.count < pullActionDetect.limit) {
+                        pullActionDetect.check();
+                        pullActionDetect.count++;
+                    }
+                }, 20);
+            }
+        }
+
+        function trigger_myScroll(offset) {
+            pullDownEl = document.querySelector('#wrapper .pullDown');
+            if (pullDownEl) {
+                pullDownOffset = pullDownEl.offsetHeight;
+            } else {
+                pullDownOffset = 0;
+            }
+            pullUpEl = document.querySelector('#wrapper .pullUp');
+            if (pullUpEl) {
+                pullUpOffset = pullUpEl.offsetHeight;
+            } else {
+                pullUpOffset = 0;
+            }
+            //alert($('#wrapper ul > li').length+"  "+items_per_page);
+            if ($('#wrapper ul > li').length < items_per_page) {
+                // If we have only 1 page of result - we hide the pullup and pulldown indicators.
+                $('#wrapper .pullDown').hide();
+                $('#wrapper .pullUp span').hide();
+                offset = 0;
+            } else if (!offset) {
+                // If we have more than 1 page of results and offset is not manually defined - we set it to be the pullUpOffset.
+                offset = pullUpOffset;
+            }
+
+            myScroll = new IScroll('#wrapper', {
+                probeType:1, tap:true, click:false, preventDefaultException:{tagName:/.*/}, mouseWheel:true, scrollbars:false, fadeScrollbars:false, interactiveScrollbars:false, keyBindings:false,
+                deceleration:0.0002,
+                startY:(parseInt(offset)*(-1))
+            });
+
+            myScroll.on('scrollStart', function () {
+                scroll_in_progress = true;
+            });
+            myScroll.on('scroll', function () {
+
+                scroll_in_progress = true;
+
+                if ($('#wrapper ul > li').length >= items_per_page) {
+                    if (this.y >= 5 && pullDownEl && !pullDownEl.className.match('flip')) {
+                        pullDownEl.className = 'pullDown flip';
+                        pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh';
+                        this.minScrollY = 0;
+                    } else if (this.y <= 5 && pullDownEl && pullDownEl.className.match('flip')) {
+                        pullDownEl.className = 'pullDown';
+                        pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新';
+                        this.minScrollY = -pullDownOffset;
+                    }
+                    console.log(this.y);
+                    pullActionDetect.check(0);
+
+                }
+            });
+            myScroll.on('scrollEnd', function () {
+                console.log('scroll ended');
+                $('#wrapper > #scroller >#pullUpUpdate').empty();
+                $('#wrapper > #scroller >#pullUpUpdate').append("<h3 style='text-align:center'>无更多信息！</h3>");
+                setTimeout(function() {
+                    scroll_in_progress = false;
+                }, 10);
+                if ($('#wrapper ul > li').length >= items_per_page) {
+                    if (pullDownEl && pullDownEl.className.match('flip')) {
+                        pullDownEl.className = 'pullDown loading';
+                        pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Loading...';
+                        pullDownAction();
+                    }
+                    // We let the momentum scroll finish, and if reached the end - loading the next page
+                    pullActionDetect.check(0);
+                }
+            });
+
+            setTimeout(function() {
+                $('#wrapper').css({left:0});
+            }, 10);
+        }
+
+        function loaded() {
+            load_content();
+        }
+
+    </script>
+    <style type="text/css">
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        html {
+            -ms-touch-action: none;
+        }
+
+        body,ul,li {
+            padding: 0;
+            margin: 0;
+            border: 0;
+        }
+
+
+        #wrapper {
+            position: absolute;
+            z-index: 1;
+            top: 0px;
+            bottom: 0px;
+            left:9999px; /* Not a must - can be 0 - but it makes the appearance of the content a bit nicer */
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #scroller {
+            position: absolute;
+            z-index: 1;
+            -webkit-tap-highlight-color: rgba(0,1,0,0);
+            width: 100%;
+            -webkit-transform: translateZ(0);
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            -o-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-text-size-adjust: none;
+            -moz-text-size-adjust: none;
+            -ms-text-size-adjust: none;
+            -o-text-size-adjust: none;
+            text-size-adjust: none;
+        }
+
+
+        .pullDownLabel, .pullUpLabel {color:#999}
+        .pullDown, .pullUp {background:#fff;height:40px;line-height:40px;font-weight:bold;font-size:0.8em;color:#888}
+        .pullDown .pullDownIcon, .pullUp .pullUpIcon {display:block;float:left;opacity:0.4;width:40px;height:40px;background:url(images/pull_to_refresh.png) 0 0 no-repeat;-webkit-background-size:40px 80px;-ms-background-size:40px 80px; background-size:40px 80px;-webkit-transition-property:-webkit-transform;-ms-transition-property:-webkit-transform;-webkit-transition-duration:250ms;-ms-transition-duration:250ms}
+        .pullDown .pullDownIcon {-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0)}
+        .pullUp .pullUpIcon  {-webkit-transform:rotate(-180deg) translateZ(0);-ms-transform:rotate(-180deg) translateZ(0)}
+        .pullDown.flip .pullDownIcon {-webkit-transform:rotate(-180deg) translateZ(0);-ms-transform:rotate(-180deg) translateZ(0)}
+        .pullUp.flip .pullUpIcon {-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0)}
+        .pullDown.loading .pullDownIcon, .pullUp.loading .pullUpIcon {background-position:0 100%;-webkit-transform:rotate(0deg) translateZ(0);-ms-transform:rotate(0deg) translateZ(0);-webkit-transition-duration:0ms;-ms-transition-duration:0ms;-webkit-animation-name:loading;-ms-animation-name:loading;-webkit-animation-duration:1s;-ms-animation-duration:1s;-webkit-animation-iteration-count:infinite;-ms-animation-iteration-count:infinite;-webkit-animation-timing-function:linear;-ms-animation-timing-function:linear}
+        @-webkit-keyframes loading {
+            from {-webkit-transform:rotate(0deg) translateZ(0)}
+            to {-webkit-transform:rotate(360deg) translateZ(0)}
+        }
+        @-ms-keyframes loading {
+            from {-ms-transform:rotate(0deg) translateZ(0)}
+            to {-ms-transform:rotate(360deg) translateZ(0)}
+        }
+
+    </style>
+
+
+</head>
+<?php
+	$date=date("Y-m-d");
+?>
+<body onload="loaded()">
+<div id="afui" class="">
+    <div class="view" id="mainview">
+        <header><!--style="height:50px"style="margin-top:5px"-->
+
+            <!--<a id="AddNews" class="icon add" href="InsertNews.html" data-ignore="True" style="float:right;text-decoration:none;color:#09C; margin-top:15px; " >添加新闻</a>-->
+            <h1 id="pageTitle" >&nbsp;&nbsp;当前单子情况</h1>
+            <img src="images/WuHou.png" alt="" style="width:80px;height:80px; margin-top:-18px; "/>
+
+        </header>
+        <!--主页 最新消息------------------------------------------------------------------------------------------- -->
+        <div class="pages" id="mainPage" style="margin-left:200px;">
+            <div data-left-drawer="left" class="panel active" id="main" data-title=""  data-selected="true">
+                <h1 style="text-align:center;font-size:15px;margin-top:5px;"><span><script type="text/javascript">document.write(new Date().toLocaleDateString());</script></span></h1>
+                <div id="myTopBtn" onclick="myScroll.scrollTo(0,0);"></div>
+                <!--<div id="myexit" onclick="alert('do');uexWidgetOne.exit();alert('finish');"></div>-->
+                <div id="wrapper">
+                    <div id="scroller">
+
+                        <div class="pullDown">
+                            <span class="pullDownIcon">更多</span>
+                            <span class="pullDownLabel">下拉刷新...</span>
+                        </div>
+
+                        <br />
+                        <ul id="list">
+
+
+                        </ul>
+
+                        <div id="pullUpUpdate" class="pullUp"></div>
+                        <!--<h3 style="text-align:center">下拉更多>></h3>-->
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!--图表分析------------------------------------------------------------------------------------------- -->
+
+            <!--更多 --------------------------------------------------------------------------------------------->
+
+
+        </div>
+        <!--侧边栏------------------------------------------------------------------------------------------- -->
+        <nav id="left"  style="z-index:5;" data-include="leftnav2.html">
+
+        </nav>
+
+    </div>
+    <div class="view" id="newsview">
+        <header>
+            <a href="#main" class="backButton" data-transition='up-reveal:dismiss'></a>
+            <h1 id="pageTitle2">公告详情</h1>
+        </header>
+        <!--主页 最新消息------------------------------------------------------------------------------------------- -->
+        <div class="pages" id="detailPage">
+            <!-- 详情页-->
+            <div class="panel" id="newsdetail" data-title="公告详情">
+
+                <div class="news" id="news_detail">
+                    <ul>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+</div>
+</body>
+
+</html>
