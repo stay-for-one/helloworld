@@ -1,0 +1,45 @@
+string.equalsIgnorecase(string)不区分大小写的字符串比较。
+char charat();//返回给定位置的字符
+int compareto（string other）//-1,0,1；
+bool endwith(string)
+int indexof(string str,int fromindex)//返回与str匹配的第一个字串的开始位置。
+int length();
+string replace( oldstr,newstr);
+string substring(int beginindex,int endindex);
+string tolowercase();
+string to uppercase();
+string trim()//去掉头尾空格的字串。
+
+
+stringbuilder（）//字符串构造器
+stringbuilder append（string str）//增加字符串
+void setchar（int i,char c)//在i的位置设置为c
+stringbuilder insert(int offset,str||char )//在指定位置插入一个字符串或者字符。
+stringbuilder delete（int begin，int end);
+
+scanner(inputstream in);
+string nextline();
+string next();
+int nextint();
+static console console();
+Printwriter(string filename);
+
+
+biginteger add(biginteger other);
+	   subtract();
+	   multiply();
+	   divide();
+	   mod()//加减乘除，余数。
+	   valueof()；
+bigdecimal。大实数；
+static string tostring(type[]a);//返回逗号间隔。
+static type copyof(type[]a,int length);
+	    copyof(type[]a,int start,int end);
+		sort();
+	int binarysearch(type[]a,int start,int end,type v)//用二分法查找值v
+static void fill（type[]a,type v)//将数组的所有数据 都设置为v
+
+面向对象的程序是由对象组成的，每个对象包含对用户公开的特定功能部分和隐藏的实现部分。
+类是构造对象的模板。
+封装：是与对象相关的重要概念。不过是将数据和行为组合在一个包中，并对对象的使用者隐藏了数据的实现方法
+对象：对象的行为，形态，标示。
